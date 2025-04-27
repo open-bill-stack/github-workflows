@@ -1,0 +1,73 @@
+name: Test
+on:
+  workflow_call:
+    inputs:
+      JOB_RUNS_ON:
+        type: string
+        required: true
+      GO_VERSION:
+        type: string
+        required: true
+
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.workflow_call.workflow_file }}
+  cancel-in-progress: true
+
+
+jobs:
+  common:
+    runs-on: ${{ inputs.JOB_RUNS_ON }}
+    strategy:
+      matrix:
+        os:
+          - linux
+        arch:
+          - amd64
+    environment:
+      name: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ inputs.GO_VERSION }}
+          check-latest: true
+          cache-dependency-path: |
+            go.sum
+
+      - name: Testing code
+        env:
+          GOOS: ${{ matrix.os }}
+          GOARCH: ${{ matrix.arch }}
+        run: go test ./...
+
+  race:
+    runs-on: ${{ inputs.JOB_RUNS_ON }}
+    strategy:
+      matrix:
+        os:
+          - linux
+        arch:
+          - amd64
+    environment:
+      name: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ inputs.GO_VERSION }}
+          check-latest: true
+          cache-dependency-path: |
+            go.sum
+
+      - name: Install gcc
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc
+
+      - name: Testing code
+        env:
+          GOOS: ${{ matrix.os }}
+          GOARCH: ${{ matrix.arch }}
+          CGO_ENABLED: 1
+        run: go test -race ./...

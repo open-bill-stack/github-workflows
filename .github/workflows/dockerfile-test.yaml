@@ -1,0 +1,23 @@
+name: Test
+on:
+  workflow_call:
+    inputs:
+      JOB_RUNS_ON:
+        type: string
+        required: true
+      HADOLINT_CHECK_ENABLE:
+        type: boolean
+        default: false
+
+jobs:
+
+  liner:
+    if: ${{ inputs.HADOLINT_CHECK_ENABLE }}
+    name: hadolint check dockerfiles
+    runs-on: ${{ inputs.JOB_RUNS_ON }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
+          recursive: true
