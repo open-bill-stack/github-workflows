@@ -10,7 +10,6 @@ on:
         default: false
 
 jobs:
-
   liner:
     if: ${{ inputs.HADOLINT_CHECK_ENABLE }}
     name: hadolint check dockerfiles

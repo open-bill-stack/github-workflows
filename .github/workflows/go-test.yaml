@@ -9,12 +9,6 @@ on:
         type: string
         required: true
 
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.workflow_call.workflow_file }}
-  cancel-in-progress: true
-
-
 jobs:
   common:
     runs-on: ${{ inputs.JOB_RUNS_ON }}
