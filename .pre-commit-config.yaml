@@ -2,7 +2,6 @@ repos:
   - repo: https://github.com/rhysd/actionlint
     rev: v1.7.7
     hooks:
-      - id: actionlint
-        language: golang
+      - id: actionlint-docker
         types: ["file", "non-executable", "text", "yaml"]
         files: ^.github/workflows
