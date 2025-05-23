@@ -2,16 +2,16 @@ name: Test
 on:
   workflow_call:
     inputs:
-      JOB_RUNS_ON:
+      RUNS_ON:
         type: string
-        required: true
+        default: ubuntu-latest
       GO_VERSION:
         type: string
-        required: true
+        default: "1.23"
 
 jobs:
   common:
-    runs-on: ${{ inputs.JOB_RUNS_ON }}
+    runs-on: ${{ inputs.RUNS_ON }}
     strategy:
       matrix:
         os:
@@ -36,7 +36,7 @@ jobs:
         run: go test ./...
 
   race:
-    runs-on: ${{ inputs.JOB_RUNS_ON }}
+    runs-on: ${{ inputs.RUNS_ON }}
     strategy:
       matrix:
         os:
